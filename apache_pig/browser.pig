@@ -1,15 +1,15 @@
 -- Define constants
-DEFINE DATA_TOKEN 'browser, os';
+%declare DATA_TOKEN 'browser, os';
 
 -- Load the data
 weblog_hd = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
-        AS (timestamp:chararray, user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray)
+        AS (timestamp:chararray, user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray);
 
 -- Filter out the file header
 weblog = FILTER weblog_hd BY timestamp != 'timestamp';
 
 -- Get each line
-weblog_lines = FOREACH weblog GENERATE FLATTEN(DATA_TOKEN) AS token;
+weblog_lines = FOREACH weblog GENERATE FLATTEN($DATA_TOKEN) AS token;
 
 -- Group tokens
 grouped = GROUP weblog_lines BY token;
