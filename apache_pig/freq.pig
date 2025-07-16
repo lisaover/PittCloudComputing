@@ -1,6 +1,6 @@
 -- Define constants
-%define NUMBER_TO_RETURN 10;
-%define DATA_TOKEN 'search_query';
+%declare NUMBER_TO_RETURN 10;
+%declare DATA_TOKEN 'search_query';
 
 -- Load the data
 weblog_hd = LOAD '/data/web_log.csv' USING PigStorage(',') 
