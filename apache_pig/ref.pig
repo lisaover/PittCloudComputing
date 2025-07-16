@@ -23,3 +23,6 @@ max_count_data = FOREACH (GROUP token_counts ALL) GENERATE MAX(token_counts.coun
 -- Filter records with max_count
 max_tokens = JOIN token_counts BY count, max_count_data BY max_count;
 
+-- Store the result to an output directory in HDFS
+STORE max_tokens INTO '/user/lao39/output/ref_pig';
+

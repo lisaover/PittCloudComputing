@@ -2,7 +2,7 @@
 DEFINE DATA_TOKEN 'browser, os';
 
 -- Load the data
-weblog_hd = LOAD '/data/web_log.csv' USING PigStorage(',') 
+weblog_hd = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
         AS (timestamp:chararray, user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray)
 
 -- Filter out the file header
@@ -22,4 +22,7 @@ max_count_data = FOREACH (GROUP token_counts ALL) GENERATE MAX(token_counts.coun
 
 -- Filter records with max_count
 max_tokens = JOIN token_counts BY count, max_count_data BY max_count;
+
+-- Store the result to an output directory in HDFS
+STORE max_tokens INTO '/user/lao39/output/browser_pig';
 

@@ -24,3 +24,6 @@ tokens_ordered = ORDER token_counts BY count DESC;
 -- Take the top # tokens
 top_tokens = LIMIT tokens_ordered NUMBER_TO_RETURN;
 
+-- Store the result to an output directory in HDFS
+STORE top_tokens INTO '/user/lao39/output/freq_pig';
+
