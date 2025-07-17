@@ -24,6 +24,8 @@ tokens_ordered = ORDER token_counts BY count DESC;
 -- Take the top # tokens - THERE IS A KNOWN BUG WITH LIMIT
 --top_tokens = LIMIT tokens_ordered $NUMBER_TO_RETURN;
 
+tokens_ordered_clean = FOREACH tokens_ordered GENERATE REPLACE(token, '.', ' ') AS token;
+
 -- Store the result to an output directory in HDFS
-STORE tokens_ordered INTO '/user/lao39/output/freq_pig';
+STORE tokens_ordered_clean INTO '/user/lao39/output/freq_pig';
 
