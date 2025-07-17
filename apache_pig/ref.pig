@@ -9,7 +9,7 @@ weblog_hd = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',')
 weblog = FOREACH weblog_hd GENERATE user_id, browser, os, referrer, REPLACE(search_query, ' ', '') AS search_query;
 
 -- Get each line
-weblog_lines = FOREACH weblog GENERATE FLATTEN(TOKENIZE$DATA_TOKEN)) AS token;
+weblog_lines = FOREACH weblog GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
 
 -- Group tokens
 grouped = GROUP weblog_lines BY token;
