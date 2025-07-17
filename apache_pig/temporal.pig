@@ -2,17 +2,17 @@
 %declare DATA_TOKEN 'log_yr, log_mn, log_day, log_hr';
 
 -- Load the data
-weblog_hd = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
+weblog_hd = LOAD '/user/lao39/logs/web_log_tm.csv' USING PigStorage(',') 
         AS (timestamp:chararray, user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray);
 
 -- Remove spaces in search_query
-Weblog = FOREACH weblog_hd GENERATE REPLACE(search_query, ' ', '');
+weblog = FOREACH weblog_hd GENERATE timestamp, user_id, browser, os, referrer, REPLACE(search_query, ' ', '') AS search_query;
 
 -- Filter out the file header
---weblog = FILTER weblog_hd BY timestamp != 'timestamp';
+weblog2 = FILTER weblog_hd BY timestamp != 'timestamp';
 
 -- Extract date and hour
-weblog_tmp = FOREACH weblog GENERATE GetYear(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_yr, GetMonth(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_mn, GetDay(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_day, GetHour(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_hr;
+weblog_tmp = FOREACH weblog2 GENERATE GetYear(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_yr, GetMonth(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_mn, GetDay(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_day, GetHour(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_hr;
 
 -- Get each line
 weblog_lines = FOREACH weblog_tmp GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
