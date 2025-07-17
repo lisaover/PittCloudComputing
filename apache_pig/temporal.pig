@@ -5,8 +5,11 @@
 weblog_hd = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
         AS (timestamp:chararray, user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray);
 
+-- Remove spaces in search_query
+Weblog = FOREACH weblog_hd GENERATE REPLACE(search_query, ' ', '');
+
 -- Filter out the file header
-weblog = FILTER weblog_hd BY timestamp != 'timestamp';
+--weblog = FILTER weblog_hd BY timestamp != 'timestamp';
 
 -- Extract date and hour
 weblog_tmp = FOREACH weblog GENERATE GetYear(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_yr, GetMonth(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_mn, GetDay(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_day, GetHour(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_hr;

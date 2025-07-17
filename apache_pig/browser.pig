@@ -5,8 +5,11 @@
 weblog_hd = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
         AS (timestamp:chararray, user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray);
 
+-- Remove spaces in search_query
+Weblog = FOREACH weblog_hd GENERATE REPLACE(search_query, ' ', '');
+
 -- Filter out the file header
-weblog = FILTER weblog_hd BY timestamp != 'timestamp';
+--weblog = FILTER weblog_hd BY timestamp != 'timestamp';
 
 -- Get each line
 weblog_lines = FOREACH weblog GENERATE FLATTEN($DATA_TOKEN) AS token;
