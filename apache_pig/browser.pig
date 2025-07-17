@@ -2,20 +2,20 @@
 %declare DATA_TOKEN 'browser_os';
 
 -- Load the data
-weblog_hd = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
+weblog = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
         AS (user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray);
 
--- Remove spaces in search_query and concatenate browser and os
-weblog = FOREACH weblog_hd GENERATE user_id, search_query, CONCAT(browser, CONCAT(':', os)) AS browser_os, referrer;
+-- Concatenate browser and os and select token
+weblog_new = FOREACH weblog GENERATE CONCAT(browser, CONCAT(':', os)) AS browser_os;
 
 -- Get each line
-weblog_lines = FOREACH weblog GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
+weblog_token = FOREACH weblog_new GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
 
 -- Group tokens
-grouped = GROUP weblog_lines BY token;
+grouped = GROUP weblog_token BY token;
 
 -- Count number of tokens in group
-token_counts = FOREACH grouped GENERATE group AS token, COUNT(weblog_lines) AS count;
+token_counts = FOREACH grouped GENERATE group AS token, COUNT(weblog_token) AS count;
 
 -- Find the maximum count
 max_count_data = FOREACH (GROUP token_counts ALL) GENERATE MAX(token_counts.count) AS max_count;
