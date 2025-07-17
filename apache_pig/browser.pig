@@ -1,12 +1,12 @@
 -- Define constants
-%declare DATA_TOKEN 'browser, os';
+%declare DATA_TOKEN 'browser_os';
 
 -- Load the data
 weblog_hd = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
         AS (user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray);
 
--- Remove spaces in search_query
-weblog = FOREACH weblog_hd GENERATE user_id, browser, os, referrer, REPLACE(search_query, ' ', '') AS search_query;
+-- Remove spaces in search_query and concatenate browser and os
+weblog = FOREACH weblog_hd GENERATE user_id, search_query, CONCAT(browser, CONCAT(':', os)) AS browser_os, referrer;
 
 -- Get each line
 weblog_lines = FOREACH weblog GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
