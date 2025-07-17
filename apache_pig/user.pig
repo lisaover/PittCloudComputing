@@ -13,7 +13,7 @@ Weblog = FOREACH weblog_hd GENERATE REPLACE(search_query, ' ', '');
 --weblog = FILTER weblog_hd BY timestamp != 'timestamp';
 
 -- Get each line
-weblog_lines = FOREACH weblog GENERATE FLATTEN($DATA_TOKEN) AS token;
+weblog_lines = FOREACH weblog GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
 
 -- Group tokens
 grouped = GROUP weblog_lines BY token;

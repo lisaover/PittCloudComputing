@@ -15,7 +15,7 @@ Weblog = FOREACH weblog_hd GENERATE REPLACE(search_query, ' ', '');
 weblog_tmp = FOREACH weblog GENERATE GetYear(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_yr, GetMonth(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_mn, GetDay(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_day, GetHour(ToDate(timestamp, 'yyyy-MM-dd HH:mm:ss')) AS log_hr;
 
 -- Get each line
-weblog_lines = FOREACH weblog_tmp GENERATE FLATTEN($DATA_TOKEN) AS token;
+weblog_lines = FOREACH weblog_tmp GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
 
 -- Group tokens
 grouped = GROUP weblog_lines BY token;
