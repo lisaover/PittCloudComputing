@@ -9,7 +9,7 @@ weblog = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',')
 weblog_new = FOREACH weblog GENERATE CONCAT(browser, CONCAT(':', os)) AS browser_os;
 
 -- Get each line
-weblog_token = FOREACH weblog_new GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
+weblog_token = FOREACH weblog_new GENERATE $DATA_TOKEN AS token;
 
 -- Group tokens
 grouped = GROUP weblog_token BY token;

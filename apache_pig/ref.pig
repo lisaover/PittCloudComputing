@@ -6,7 +6,7 @@ weblog = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',')
         AS (user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray);
 
 -- Get each line
-weblog_token = FOREACH weblog GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
+weblog_token = FOREACH weblog GENERATE $DATA_TOKEN AS token;
 
 -- Group tokens
 grouped = GROUP weblog_token BY token;

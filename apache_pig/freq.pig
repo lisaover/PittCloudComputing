@@ -3,14 +3,11 @@
 %declare DATA_TOKEN 'search_query';
 
 -- Load the data
-weblog = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',') 
+weblog = LOAD '/user/lao39/logs/web_log.csv' USING PigStorage(',')
         AS (user_id:chararray, search_query:chararray, browser:chararray, os:chararray, referrer:chararray);
 
--- Remove spaces in search_query
-weblog_new = FOREACH weblog GENERATE REPLACE(search_query, ' ', '.') AS search_query;
-
 -- Get each line
-weblog_token = FOREACH weblog_new GENERATE FLATTEN(TOKENIZE($DATA_TOKEN)) AS token;
+weblog_token = FOREACH weblog GENERATE $DATA_TOKEN AS token;
 
 -- Group tokens
 grouped = GROUP weblog_token BY token;
